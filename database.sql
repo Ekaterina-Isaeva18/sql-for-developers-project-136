@@ -140,7 +140,7 @@ CREATE TABLE discussions(
   update_at TIMESTAMPTZ
 );
 
-CREATE TYPE art_status_type AS ENUM ('created', 'in moderation', 'published', 'archived');
+CREATE TYPE art_status_type AS ENUM ('created', 'in_moderation', 'published', 'archived');
 CREATE TABLE blog(
   id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   user_id BIGINT REFERENCES users(id) NOT NULL,
