@@ -1,52 +1,52 @@
 CREATE TABLE programs(
   id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-  title VARCHAR(250) NOT NULL,
+  name VARCHAR(250) NOT NULL,
   price DECIMAL NOT NULL,
-  type VARCHAR(250) NOT NULL,
+  program_type VARCHAR(250) NOT NULL,
   created_at TIMESTAMPTZ NOT NULL,
   updated_at TIMESTAMPTZ
 );
 
 CREATE TABLE moduls(
   id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-  title VARCHAR(250) NOT NULL,
-  body TEXT NOT NULL,
+  name VARCHAR(250) NOT NULL,
+  description TEXT NOT NULL,
   created_at TIMESTAMPTZ NOT NULL,
   updated_at TIMESTAMPTZ,
-  is_deleted BOOLEAN NOT NULL DEFAULT false
+  deleted_at TIMESTAMPTZ
 );
 
 CREATE TABLE programs_modules(
   program_id BIGINT REFERENCES programs(id) NOT NULL,
-  modul_id BIGINT REFERENCES moduls(id) NOT NULL,
-  PRIMARY KEY(program_id, modul_id)
+  module_id BIGINT REFERENCES moduls(id) NOT NULL,
+  PRIMARY KEY(program_id, module_id)
 );
 
 CREATE TABLE courses(
   id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-  title VARCHAR(250) NOT NULL,
-  body TEXT NOT NULL,
+  name VARCHAR(250) NOT NULL,
+  description TEXT NOT NULL,
   created_at TIMESTAMPTZ NOT NULL,
   updated_at TIMESTAMPTZ,
-  is_deleted BOOLEAN NOT NULL DEFAULT false
+  deleted_at TIMESTAMPTZ
 );
 
 CREATE TABLE modules_courses(
-  modul_id BIGINT REFERENCES moduls(id) NOT NULL,
+  module_id BIGINT REFERENCES moduls(id) NOT NULL,
   course_id BIGINT REFERENCES courses(id) NOT NULL,
-  PRIMARY KEY(modul_id, course_id)
+  PRIMARY KEY(module_id, course_id)
 );
 
 CREATE TABLE lessons(
   id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-  title VARCHAR(250) NOT NULL,
+  name VARCHAR(250) NOT NULL,
   content TEXT NOT NULL,
-  video_link TEXT UNIQUE,
+  video_url TEXT UNIQUE,
   position BIGINT NOT NULL,
   created_at TIMESTAMPTZ NOT NULL,
   updated_at TIMESTAMPTZ,
   course_id BIGINT REFERENCES courses(id) NOT NULL,
-  is_ BOOLEAN NOT NULL DEFAULT false
+  deleted_at TIMESTAMPTZ
   );
 
 CREATE TABLE teaching_groups(
@@ -61,11 +61,12 @@ CREATE TABLE users(
   id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   name VARCHAR(250) NOT NULL,
   email VARCHAR(250) UNIQUE NOT NULL,
-  password TEXT UNIQUE NOT NULL,
-  group_id BIGINT REFERENCES teaching_groups(id) NOT NULL,
+  password_hash TEXT UNIQUE NOT NULL,
+  teaching_group_id BIGINT REFERENCES teaching_groups(id) NOT NULL,
   created_at TIMESTAMPTZ NOT NULL,
   updated_at TIMESTAMPTZ,
-  role role_type NOT NULL
+  role role_type NOT NULL,
+  deleted_at TIMESTAMPTZ
 );
 
 CREATE TYPE enrol_status_type AS ENUM ('active', 'pending', 'cancelled', 'completed');
@@ -82,10 +83,10 @@ CREATE TABLE enrollments(
 CREATE TYPE pay_status_type AS ENUM ('pending', 'paid', 'failed', 'refunded');
 CREATE TABLE payments(
   id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-  enrol_id BIGINT REFERENCES enrollments(id) UNIQUE NOT NULL,
-  price DECIMAL NOT NULL,
+  enrollment_id BIGINT REFERENCES enrollments(id) UNIQUE NOT NULL,
+  amount DECIMAL NOT NULL,
   status pay_status_type NOT NULL,
-  payment_at TIMESTAMPTZ NOT NULL,
+  paid_at TIMESTAMPTZ NOT NULL,
   created_at TIMESTAMPTZ NOT NULL,
   updated_at TIMESTAMPTZ
 );
@@ -96,8 +97,8 @@ CREATE TABLE program_completions(
   user_id BIGINT REFERENCES users(id) NOT NULL,
   program_id BIGINT REFERENCES programs(id) NOT NULL,
   status program_status_type NOT NULL,
-  start_at TIMESTAMPTZ,
-  end_at TIMESTAMPTZ,
+  started_at TIMESTAMPTZ,
+  completed_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ NOT NULL,
   updated_at TIMESTAMPTZ,
   UNIQUE(user_id, program_id)
@@ -108,7 +109,7 @@ CREATE TABLE certificates(
   user_id BIGINT REFERENCES users(id) NOT NULL,
   program_id BIGINT REFERENCES programs(id) NOT NULL,
   url TEXT UNIQUE NOT NULL,
-  release_at TIMESTAMPTZ NOT NULL,
+  issued_at TIMESTAMPTZ NOT NULL,
   created_at TIMESTAMPTZ NOT NULL,
   updated_at TIMESTAMPTZ,
   UNIQUE(user_id, program_id)
@@ -117,7 +118,7 @@ CREATE TABLE certificates(
 CREATE TABLE quizzes(
   id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   lesson_id BIGINT REFERENCES lessons(id) UNIQUE NOT NULL,
-  title VARCHAR(250) NOT NULL,
+  name VARCHAR(250) NOT NULL,
   content JSONB NOT NULL,
   created_at TIMESTAMPTZ NOT NULL,
   updated_at TIMESTAMPTZ
@@ -126,7 +127,7 @@ CREATE TABLE quizzes(
 CREATE TABLE exercises(
   id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   lesson_id BIGINT REFERENCES lessons(id) UNIQUE NOT NULL,
-  title VARCHAR(250) NOT NULL,
+  name VARCHAR(250) NOT NULL,
   url TEXT UNIQUE NOT NULL,
   created_at TIMESTAMPTZ NOT NULL,
   updated_at TIMESTAMPTZ
@@ -135,7 +136,8 @@ CREATE TABLE exercises(
 CREATE TABLE discussions(
   id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   lesson_id BIGINT REFERENCES lessons(id) UNIQUE NOT NULL,
-  content JSONB NOT NULL,
+  user_id BIGINT REFERENCES users(id) NOT NULL,
+  text JSONB NOT NULL,
   created_at TIMESTAMPTZ NOT NULL,
   updated_at TIMESTAMPTZ
 );
@@ -144,7 +146,7 @@ CREATE TYPE art_status_type AS ENUM ('created', 'in_moderation', 'published', 'a
 CREATE TABLE blog(
   id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   user_id BIGINT REFERENCES users(id) NOT NULL,
-  title VARCHAR(250) NOT NULL,
+  name VARCHAR(250) NOT NULL,
   content TEXT NOT NULL,
   status art_status_type NOT NULL,
   created_at TIMESTAMPTZ NOT NULL,
