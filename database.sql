@@ -4,7 +4,7 @@ CREATE TABLE programs(
   price DECIMAL NOT NULL,
   type VARCHAR(250) NOT NULL,
   created_at TIMESTAMPTZ NOT NULL,
-  update_at TIMESTAMPTZ
+  updated_at TIMESTAMPTZ
 );
 
 CREATE TABLE moduls(
@@ -12,7 +12,7 @@ CREATE TABLE moduls(
   title VARCHAR(250) NOT NULL,
   body TEXT NOT NULL,
   created_at TIMESTAMPTZ NOT NULL,
-  update_at TIMESTAMPTZ,
+  updated_at TIMESTAMPTZ,
   is_deleted BOOLEAN NOT NULL DEFAULT false
 );
 
@@ -27,7 +27,7 @@ CREATE TABLE courses(
   title VARCHAR(250) NOT NULL,
   body TEXT NOT NULL,
   created_at TIMESTAMPTZ NOT NULL,
-  update_at TIMESTAMPTZ,
+  updated_at TIMESTAMPTZ,
   is_deleted BOOLEAN NOT NULL DEFAULT false
 );
 
@@ -44,7 +44,7 @@ CREATE TABLE lessons(
   video_link TEXT UNIQUE,
   position BIGINT NOT NULL,
   created_at TIMESTAMPTZ NOT NULL,
-  update_at TIMESTAMPTZ,
+  updated_at TIMESTAMPTZ,
   course_id BIGINT REFERENCES courses(id) NOT NULL,
   is_ BOOLEAN NOT NULL DEFAULT false
   );
@@ -53,7 +53,7 @@ CREATE TABLE teaching_groups(
   id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   slug VARCHAR(250) UNIQUE NOT NULL,
   created_at TIMESTAMPTZ NOT NULL,
-  update_at TIMESTAMPTZ
+  updated_at TIMESTAMPTZ
 );
 
 CREATE TYPE role_type AS ENUM ('student', 'teacher', 'admin');
@@ -64,8 +64,8 @@ CREATE TABLE users(
   password TEXT UNIQUE NOT NULL,
   group_id BIGINT REFERENCES teaching_groups(id) NOT NULL,
   created_at TIMESTAMPTZ NOT NULL,
-  update_at TIMESTAMPTZ,
-  role ENUM ('student', 'teacher', 'admin') NOT NULL
+  updated_at TIMESTAMPTZ,
+  role role_type NOT NULL
 );
 
 CREATE TYPE enrol_status_type AS ENUM ('active', 'pending', 'cancelled', 'completed');
@@ -75,7 +75,7 @@ CREATE TABLE enrollments(
   program_id BIGINT REFERENCES programs(id) NOT NULL,
   status enrol_status_type NOT NULL,
   created_at TIMESTAMPTZ NOT NULL,
-  update_at TIMESTAMPTZ,
+  updated_at TIMESTAMPTZ,
   UNIQUE(user_id, program_id)
 );
 
@@ -87,7 +87,7 @@ CREATE TABLE payments(
   status pay_status_type NOT NULL,
   payment_at TIMESTAMPTZ NOT NULL,
   created_at TIMESTAMPTZ NOT NULL,
-  update_at TIMESTAMPTZ
+  updated_at TIMESTAMPTZ
 );
 
 CREATE TYPE program_status_type AS ENUM ('active', 'completed', 'pending', 'cancelled');
@@ -99,7 +99,7 @@ CREATE TABLE program_completions(
   start_at TIMESTAMPTZ,
   end_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ NOT NULL,
-  update_at TIMESTAMPTZ,
+  updated_at TIMESTAMPTZ,
   UNIQUE(user_id, program_id)
 );
 
@@ -110,7 +110,7 @@ CREATE TABLE certificates(
   url TEXT UNIQUE NOT NULL,
   release_at TIMESTAMPTZ NOT NULL,
   created_at TIMESTAMPTZ NOT NULL,
-  update_at TIMESTAMPTZ,
+  updated_at TIMESTAMPTZ,
   UNIQUE(user_id, program_id)
 );
 
@@ -120,7 +120,7 @@ CREATE TABLE quizzes(
   title VARCHAR(250) NOT NULL,
   content JSONB NOT NULL,
   created_at TIMESTAMPTZ NOT NULL,
-  update_at TIMESTAMPTZ
+  updated_at TIMESTAMPTZ
 );
 
 CREATE TABLE exercises(
@@ -129,7 +129,7 @@ CREATE TABLE exercises(
   title VARCHAR(250) NOT NULL,
   url TEXT UNIQUE NOT NULL,
   created_at TIMESTAMPTZ NOT NULL,
-  update_at TIMESTAMPTZ
+  updated_at TIMESTAMPTZ
 );
 
 CREATE TABLE discussions(
@@ -137,7 +137,7 @@ CREATE TABLE discussions(
   lesson_id BIGINT REFERENCES lessons(id) UNIQUE NOT NULL,
   content JSONB NOT NULL,
   created_at TIMESTAMPTZ NOT NULL,
-  update_at TIMESTAMPTZ
+  updated_at TIMESTAMPTZ
 );
 
 CREATE TYPE art_status_type AS ENUM ('created', 'in_moderation', 'published', 'archived');
@@ -148,5 +148,5 @@ CREATE TABLE blog(
   content TEXT NOT NULL,
   status art_status_type NOT NULL,
   created_at TIMESTAMPTZ NOT NULL,
-  update_at TIMESTAMPTZ
+  updated_at TIMESTAMPTZ
 );
