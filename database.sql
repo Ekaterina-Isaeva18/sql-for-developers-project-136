@@ -7,7 +7,7 @@ CREATE TABLE programs(
   updated_at TIMESTAMPTZ
 );
 
-CREATE TABLE moduls(
+CREATE TABLE modules(
   id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   name VARCHAR(250) NOT NULL,
   description TEXT NOT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE moduls(
   deleted_at TIMESTAMPTZ
 );
 
-CREATE TABLE programs_modules(
+CREATE TABLE program_modules(
   program_id BIGINT REFERENCES programs(id) NOT NULL,
   module_id BIGINT REFERENCES moduls(id) NOT NULL,
   PRIMARY KEY(program_id, module_id)
@@ -31,7 +31,7 @@ CREATE TABLE courses(
   deleted_at TIMESTAMPTZ
 );
 
-CREATE TABLE modules_courses(
+CREATE TABLE course_modules(
   module_id BIGINT REFERENCES moduls(id) NOT NULL,
   course_id BIGINT REFERENCES courses(id) NOT NULL,
   PRIMARY KEY(module_id, course_id)
@@ -143,7 +143,7 @@ CREATE TABLE discussions(
 );
 
 CREATE TYPE art_status_type AS ENUM ('created', 'in_moderation', 'published', 'archived');
-CREATE TABLE blog(
+CREATE TABLE blogs(
   id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   user_id BIGINT REFERENCES users(id) NOT NULL,
   name VARCHAR(250) NOT NULL,
