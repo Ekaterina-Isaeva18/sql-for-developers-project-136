@@ -62,7 +62,7 @@ CREATE TABLE users(
   name VARCHAR(250) NOT NULL,
   email VARCHAR(250) UNIQUE NOT NULL,
   password_hash TEXT UNIQUE,
-  teaching_group_id BIGINT REFERENCES teaching_groups(id) NOT NULL,
+  teaching_group_id BIGINT REFERENCES teaching_groups(id),
   created_at TIMESTAMPTZ NOT NULL,
   updated_at TIMESTAMPTZ,
   role role_type NOT NULL,
