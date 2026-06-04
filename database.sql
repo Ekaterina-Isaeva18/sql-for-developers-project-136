@@ -18,7 +18,7 @@ CREATE TABLE modules(
 
 CREATE TABLE program_modules(
   program_id BIGINT REFERENCES programs(id) NOT NULL,
-  module_id BIGINT REFERENCES moduls(id) NOT NULL,
+  module_id BIGINT REFERENCES modules(id) NOT NULL,
   PRIMARY KEY(program_id, module_id)
 );
 
@@ -32,7 +32,7 @@ CREATE TABLE courses(
 );
 
 CREATE TABLE course_modules(
-  module_id BIGINT REFERENCES moduls(id) NOT NULL,
+  module_id BIGINT REFERENCES modules(id) NOT NULL,
   course_id BIGINT REFERENCES courses(id) NOT NULL,
   PRIMARY KEY(module_id, course_id)
 );
