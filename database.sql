@@ -13,7 +13,7 @@ CREATE TABLE moduls(
   body TEXT NOT NULL,
   created_at TIMESTAMPTZ NOT NULL,
   update_at TIMESTAMPTZ,
-  is_deleted BOOLEAN NOT NULL DEFAULT 0
+  is_deleted BOOLEAN NOT NULL DEFAULT false
 );
 
 CREATE TABLE programs_modules(
@@ -28,7 +28,7 @@ CREATE TABLE courses(
   body TEXT NOT NULL,
   created_at TIMESTAMPTZ NOT NULL,
   update_at TIMESTAMPTZ,
-  is_deleted BOOLEAN NOT NULL DEFAULT 0
+  is_deleted BOOLEAN NOT NULL DEFAULT false
 );
 
 CREATE TABLE modules_courses(
@@ -46,7 +46,7 @@ CREATE TABLE lessons(
   created_at TIMESTAMPTZ NOT NULL,
   update_at TIMESTAMPTZ,
   course_id BIGINT REFERENCES courses(id) NOT NULL,
-  is_deleted BOOLEAN NOT NULL DEFAULT 0
+  is_ BOOLEAN NOT NULL DEFAULT false
   );
 
 CREATE TABLE teaching_groups(
