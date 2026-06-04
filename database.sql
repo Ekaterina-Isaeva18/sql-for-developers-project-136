@@ -1,28 +1,31 @@
-CREATE TABLE lessons(
-  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-  title VARCHAR(250) NOT NULL,
-  content VARCHAR(250) NOT NULL,
-  video_link TEXT UNIQUE,
-  position BIGINT NOT NULL,
-  created_at TIMESTAMPTZ NOT NULL,
-  update_at TIMESTAMPTZ,
-  course_link TEXT UNIQUE NOT NULL
-  );
-
 CREATE TABLE courses(
   id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   title VARCHAR(250) NOT NULL,
   body TEXT NOT NULL,
   created_at TIMESTAMPTZ NOT NULL,
-  update_at TIMESTAMPTZ
+  update_at TIMESTAMPTZ,
+  delete_mark VARCHAR(250)
 );
+
+CREATE TABLE lessons(
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  title VARCHAR(250) NOT NULL,
+  content TEXT NOT NULL,
+  video_link TEXT UNIQUE,
+  position BIGINT NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL,
+  update_at TIMESTAMPTZ,
+  course_id BIGINT REFERENCES courses(id) NOT NULL,
+  delete_mark VARCHAR(250)
+  );
 
 CREATE TABLE moduls(
   id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   title VARCHAR(250) NOT NULL,
   body TEXT NOT NULL,
   created_at TIMESTAMPTZ NOT NULL,
-  update_at TIMESTAMPTZ
+  update_at TIMESTAMPTZ,
+  delete_mark VARCHAR(250)
 );
 
 CREATE TABLE programs(
@@ -32,4 +35,23 @@ CREATE TABLE programs(
   type VARCHAR(250) NOT NULL,
   created_at TIMESTAMPTZ NOT NULL,
   update_at TIMESTAMPTZ
+);
+
+CREATE TABLE teaching_groups(
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  slug VARCHAR(250) UNIQUE NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL,
+  update_at TIMESTAMPTZ
+);
+
+CREATE TYPE role_type AS ENUM ('student', 'teacher', 'admin');
+CREATE TABLE users(
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  name VARCHAR(250) NOT NULL,
+  email VARCHAR(250) UNIQUE NOT NULL,
+  password TEXT UNIQUE NOT NULL,
+  group_id BIGINT REFERENCES teaching_groups(id) NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL,
+  update_at TIMESTAMPTZ,
+  role role_type NOT NULL
 );
