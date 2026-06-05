@@ -41,7 +41,7 @@ CREATE TABLE lessons(
   id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   name VARCHAR(250) NOT NULL,
   content TEXT NOT NULL,
-  video_url TEXT UNIQUE,
+  video_url TEXT,
   position BIGINT,
   created_at TIMESTAMPTZ NOT NULL,
   updated_at TIMESTAMPTZ,
@@ -61,7 +61,7 @@ CREATE TABLE users(
   id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   name VARCHAR(250) NOT NULL,
   email VARCHAR(250) UNIQUE NOT NULL,
-  password_hash TEXT UNIQUE,
+  password_hash TEXT,
   teaching_group_id BIGINT REFERENCES teaching_groups(id),
   created_at TIMESTAMPTZ NOT NULL,
   updated_at TIMESTAMPTZ,
@@ -132,7 +132,7 @@ CREATE TABLE exercises(
   id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   lesson_id BIGINT REFERENCES lessons(id) UNIQUE NOT NULL,
   name VARCHAR(250) NOT NULL,
-  url TEXT UNIQUE NOT NULL,
+  url TEXT NOT NULL,
   created_at TIMESTAMPTZ NOT NULL,
   updated_at TIMESTAMPTZ
 );
