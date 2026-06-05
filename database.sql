@@ -68,8 +68,8 @@ CREATE TABLE users(
   role role_type NOT NULL,
   deleted_at TIMESTAMPTZ,
   CONSTRAINT students_must_have_group CHECK (
-        (role = 'student' AND teaching_group_id IS NOT NULL) OR
-        (role IN ('teacher', 'admin') AND teaching_group_id IS NULL)
+        (role = 'Student' AND teaching_group_id IS NOT NULL) OR
+        (role IN ('Teacher', 'Admin') AND teaching_group_id IS NULL)
     )
 );
 
