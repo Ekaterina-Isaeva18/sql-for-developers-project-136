@@ -87,7 +87,7 @@ CREATE TABLE enrollments(
 CREATE TYPE pay_status_type AS ENUM ('pending', 'paid', 'failed', 'refunded');
 CREATE TABLE payments(
   id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-  enrollment_id BIGINT REFERENCES enrollments(id) UNIQUE NOT NULL,
+  enrollment_id BIGINT REFERENCES enrollments(id) NOT NULL,
   amount DECIMAL NOT NULL,
   status pay_status_type NOT NULL,
   paid_at TIMESTAMPTZ NOT NULL,
