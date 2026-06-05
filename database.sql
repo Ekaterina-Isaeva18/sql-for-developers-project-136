@@ -56,7 +56,7 @@ CREATE TABLE teaching_groups(
   updated_at TIMESTAMPTZ
 );
 
-CREATE TYPE role_type AS ENUM ('student', 'teacher', 'admin');
+CREATE TYPE role_type AS ENUM ('Student', 'Teacher', 'Admin');
 CREATE TABLE users(
   id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   name VARCHAR(250) NOT NULL,
